@@ -1,0 +1,59 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#183b39">
+    <title>{% block title %}Employee Payroll{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="{% url 'payroll:dashboard' %}">
+          <span class="brand-mark" aria-hidden="true">EP</span>
+          <span class="brand-copy"><strong>Employee Payroll</strong><small>Management System</small></span>
+        </a>
+        <nav class="primary-nav" aria-label="Main navigation">
+          <p class="nav-caption">Workspace</p>
+          <a class="nav-link{% if request.resolver_match.url_name == 'dashboard' or request.resolver_match.url_name == 'home' %} is-active{% endif %}" href="{% url 'payroll:dashboard' %}"><span class="nav-symbol">01</span>Dashboard</a>
+          <a class="nav-link{% if request.resolver_match.url_name == 'employees' %} is-active{% endif %}" href="{% url 'payroll:employees' %}"><span class="nav-symbol">02</span>Employees</a>
+          <a class="nav-link{% if request.resolver_match.url_name == 'departments' %} is-active{% endif %}" href="{% url 'payroll:departments' %}"><span class="nav-symbol">03</span>Departments</a>
+          <a class="nav-link{% if request.resolver_match.url_name == 'attendance' %} is-active{% endif %}" href="{% url 'payroll:attendance' %}"><span class="nav-symbol">04</span>Attendance</a>
+          <a class="nav-link{% if request.resolver_match.url_name == 'leaves' %} is-active{% endif %}" href="{% url 'payroll:leaves' %}"><span class="nav-symbol">05</span>Leave Management</a>
+          <a class="nav-link{% if request.resolver_match.url_name == 'payroll' %} is-active{% endif %}" href="{% url 'payroll:payroll' %}"><span class="nav-symbol">06</span>Payroll</a>
+          <a class="nav-link{% if request.resolver_match.url_name == 'payslip' or request.resolver_match.url_name == 'payslip_detail' %} is-active{% endif %}" href="{% url 'payroll:payslip' %}"><span class="nav-symbol">07</span>Payslip</a>
+          <a class="nav-link{% if request.resolver_match.url_name == 'reports' %} is-active{% endif %}" href="{% url 'payroll:reports' %}"><span class="nav-symbol">08</span>Reports</a>
+        </nav>
+        <div class="sidebar-footer">
+          <span class="status-indicator" aria-hidden="true"></span>
+          <span>Payroll workspace</span>
+          <form class="logout-form" method="post" action="{% url 'payroll:logout' %}">
+            {# CSRF protection is required for this session-changing POST. #}
+            {% csrf_token %}
+            <button class="logout-link" type="submit">Logout</button>
+          </form>
+        </div>
+      </aside>
+
+      <div class="main-panel">
+        <header class="top-header">
+          <div><p class="header-kicker">Employee Payroll Management System</p><p class="header-context">Administration workspace</p></div>
+          <div class="header-status"><span class="status-indicator" aria-hidden="true"></span>Welcome, {{ user.username }}</div>
+        </header>
+        <main class="content-area">
+          {% if messages %}
+            <div class="message-stack" aria-live="polite">
+              {% for message in messages %}
+                <p class="message message-{{ message.tags }}">{{ message }}</p>
+              {% endfor %}
+            </div>
+          {% endif %}
+          {% block content %}{% endblock %}
+        </main>
+        <footer class="page-footer">Employee Payroll Management System</footer>
+      </div>
+    </div>
+  </body>
+</html>

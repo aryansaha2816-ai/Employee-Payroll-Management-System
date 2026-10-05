@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Payroll PAY-{{ record.payroll_id }} | Employee Payroll{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><p class="section-kicker">Payroll register</p><h1>Payroll details</h1><p class="page-description">Payroll ID: PAY-{{ record.payroll_id }}</p></div>
+  <a class="button button-secondary" href="{% url 'payroll:payroll' %}">Back to payroll</a>
+</section>
+<section class="surface-card employee-detail-card">
+  <div class="surface-heading"><div><p class="section-kicker">{{ record.month|default:"Payroll period" }}</p><h2>{{ record.emp.emp_name|default:"Employee record unavailable" }}</h2></div><span class="recent-id">PAY-{{ record.payroll_id }}</span></div>
+  <dl class="detail-grid">
+    <div class="detail-row"><dt>Employee</dt><dd>{{ record.emp.emp_name|default:"--" }} (EMP-{{ record.emp_id }})</dd></div>
+    <div class="detail-row"><dt>Department</dt><dd>{{ record.emp.department.department_name|default:"Unassigned" }}</dd></div>
+    <div class="detail-row"><dt>Month</dt><dd>{{ record.month|default:"--" }}</dd></div>
+    <div class="detail-row"><dt>Basic salary</dt><dd>₹ {{ record.basic_salary|default_if_none:"0.00"|floatformat:2 }}</dd></div>
+    <div class="detail-row"><dt>Bonus</dt><dd>₹ {{ record.bonus|default_if_none:"0.00"|floatformat:2 }}</dd></div>
+    <div class="detail-row"><dt>Deductions</dt><dd>₹ {{ record.deductions|default_if_none:"0.00"|floatformat:2 }}</dd></div>
+    <div class="detail-row"><dt>Net salary</dt><dd>₹ {{ record.net_salary|default_if_none:"0.00"|floatformat:2 }}</dd></div>
+  </dl>
+  <div class="form-actions">
+    <a class="button button-secondary" href="{% url 'payroll:payroll' %}">Back to payroll</a>
+    <a class="button button-primary" href="{% url 'payroll:payroll_edit' record.payroll_id %}">Edit payroll</a>
+  </div>
+</section>
+{% endblock %}

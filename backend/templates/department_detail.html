@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Department {{ department.department_id }} | Employee Payroll{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><p class="section-kicker">Department directory</p><h1>Department details</h1><p class="page-description">Department ID: DEP-{{ department.department_id }}</p></div>
+  <a class="button button-secondary" href="{% url 'payroll:departments' %}">Back to departments</a>
+</section>
+<section class="surface-card employee-detail-card">
+  <div class="surface-heading"><div><p class="section-kicker">Department</p><h2>{{ department.department_name }}</h2></div><span class="recent-id">{{ department.employee_count }} employee{{ department.employee_count|pluralize }}</span></div>
+  <dl class="detail-grid">
+    <div class="detail-row"><dt>Department ID</dt><dd>DEP-{{ department.department_id }}</dd></div>
+    <div class="detail-row"><dt>Department name</dt><dd>{{ department.department_name }}</dd></div>
+  </dl>
+  <div class="form-actions">
+    <a class="button button-secondary" href="{% url 'payroll:departments' %}">Back to departments</a>
+    <a class="button button-primary" href="{% url 'payroll:department_edit' department.department_id %}">Edit department</a>
+  </div>
+</section>
+
+<section class="surface-card table-panel department-member-panel">
+  <div class="surface-heading"><div><p class="section-kicker">Team</p><h2>Employees in this department</h2></div></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Employee ID</th><th>Employee name</th><th>Designation</th><th>Join date</th><th>Basic salary</th></tr></thead>
+      <tbody>
+        {% for employee in department.employees.all %}
+          <tr>
+            <td>EMP-{{ employee.emp_id }}</td>
+            <td>{{ employee.emp_name|default:"--" }}</td>
+            <td>{{ employee.designation|default:"--" }}</td>
+            <td>{{ employee.join_date|date:"M j, Y"|default:"--" }}</td>
+            <td>{% if employee.basic_salary != None %}₹ {{ employee.basic_salary|floatformat:2 }}{% else %}--{% endif %}</td>
+          </tr>
+        {% empty %}
+          <tr><td class="empty-cell" colspan="5">No employees belong to this department.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

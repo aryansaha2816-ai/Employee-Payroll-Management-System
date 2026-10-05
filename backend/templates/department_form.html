@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} | Employee Payroll{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><p class="section-kicker">Department directory</p><h1>{{ page_title }}</h1><p class="page-description">Manage the existing department record.</p></div>
+  <a class="button button-secondary" href="{% url 'payroll:departments' %}">Back to departments</a>
+</section>
+<section class="surface-card employee-form-card">
+  <form class="employee-form" method="post" action="{% if department %}{% url 'payroll:department_edit' department.department_id %}{% else %}{% url 'payroll:department_add' %}{% endif %}">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% for field in form %}
+      <div class="form-field">
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.help_text %}<span class="form-help">{{ field.help_text }}</span>{% endif %}
+        {% if field.errors %}<ul class="form-field-errors">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+    {% endfor %}
+    <div class="form-actions">
+      <a class="button button-secondary" href="{% url 'payroll:departments' %}">Cancel</a>
+      <button class="button button-primary" type="submit">{% if department %}Save changes{% else %}Add department{% endif %}</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

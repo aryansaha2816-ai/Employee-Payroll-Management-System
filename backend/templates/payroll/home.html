@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Django is running | Employee Payroll{% endblock %}
+
+{% block content %}
+  <section class="status-panel" aria-labelledby="page-title">
+    <p class="eyebrow">Phase 1 · Django foundation</p>
+    <h1 id="page-title">Django is running.</h1>
+    <p class="intro">The server-rendered application shell is responding successfully.</p>
+    <dl class="status-list">
+      <div><dt>Application</dt><dd>Employee Payroll Management System</dd></div>
+      <div><dt>Rendering</dt><dd>Django Templates</dd></div>
+      <div><dt>Database</dt><dd>MySQL configured; migrations not applied</dd></div>
+      <div><dt>Phase status</dt><dd>Feature modules not started</dd></div>
+    </dl>
+  </section>
+{% endblock %}

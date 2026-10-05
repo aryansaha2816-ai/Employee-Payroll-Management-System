@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} | Employee Payroll{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><p class="section-kicker">Payroll register</p><h1>{{ page_title }}</h1><p class="page-description">Enter the salary components for this employee and month.</p></div>
+  <a class="button button-secondary" href="{% url 'payroll:payroll' %}">Back to payroll</a>
+</section>
+
+{% if not record and not selected_employee %}
+  <section class="surface-card employee-form-card">
+    <form class="employee-form" method="get" action="{% url 'payroll:payroll_add' %}">
+      <div class="form-field">
+        <label class="field-label" for="payroll-employee-select">Employee</label>
+        <select class="form-control" id="payroll-employee-select" name="employee" required>
+          <option value="">Select an employee</option>
+          {% for employee in employees %}<option value="{{ employee.emp_id }}">{{ employee.emp_name }} (EMP-{{ employee.emp_id }})</option>{% endfor %}
+        </select>
+      </div>
+      <div class="form-actions"><button class="button button-primary" type="submit">Continue</button></div>
+    </form>
+  </section>
+{% else %}
+  <section class="surface-card employee-form-card">
+    <form class="employee-form" method="post" action="{% if record %}{% url 'payroll:payroll_edit' record.payroll_id %}{% else %}{% url 'payroll:payroll_add' %}{% endif %}">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% if not record %}
+        {{ form.employee.as_hidden }}
+        <p class="payroll-selected-employee">Employee: <strong>{{ selected_employee.emp_name }}</strong> (EMP-{{ selected_employee.emp_id }})</p>
+        {% if form.employee.errors %}<ul class="form-field-errors">{% for error in form.employee.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+      {% endif %}
+      <div class="employee-form-grid">
+        {% for field in form %}
+          {% if field.name != "employee" or record %}
+            <div class="form-field">
+              {{ field.label_tag }}
+              {{ field }}
+              {% if field.help_text %}<span class="form-help">{{ field.help_text }}</span>{% endif %}
+              {% if field.errors %}<ul class="form-field-errors">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <p class="payroll-trigger-note">Net salary is calculated from the saved salary components by the existing database behavior.</p>
+      <div class="form-actions">
+        <a class="button button-secondary" href="{% url 'payroll:payroll' %}">Cancel</a>
+        <button class="button button-primary" type="submit">{% if record %}Save changes{% else %}Generate payroll{% endif %}</button>
+      </div>
+    </form>
+  </section>
+{% endif %}
+{% endblock %}

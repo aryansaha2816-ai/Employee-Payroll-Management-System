@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Payslip PAY-{{ record.payroll_id }} | Employee Payroll{% endblock %}
+{% block content %}
+<section class="page-heading payslip-page-heading">
+  <div><p class="section-kicker">Salary document</p><h1>Payslip details</h1><p class="page-description">Payroll ID: PAY-{{ record.payroll_id }}</p></div>
+  <div class="payslip-actions">
+    <a class="button button-secondary" href="{% url 'payroll:payslip' %}">Back to payslips</a>
+    <button class="button button-primary" type="button" onclick="window.print()">Print payslip</button>
+  </div>
+</section>
+
+<article class="surface-card payslip-sheet">
+  <header class="payslip-document-heading">
+    <div>
+      <p class="section-kicker">Employee Payroll Management System</p>
+      <h2>EMPLOYEE PAYSLIP</h2>
+    </div>
+    <dl class="payslip-period">
+      <div><dt>Payroll month</dt><dd>{{ record.month|default:"--" }}</dd></div>
+      <div><dt>Prepared on</dt><dd>{{ printed_on|date:"M j, Y" }}</dd></div>
+      <div><dt>Payroll ID</dt><dd>PAY-{{ record.payroll_id }}</dd></div>
+    </dl>
+  </header>
+
+  <section class="payslip-section" aria-labelledby="payslip-employee-heading">
+    <div class="payslip-section-heading"><p class="section-kicker">Employee information</p><h3 id="payslip-employee-heading">{{ record.emp.emp_name|default:"Employee record unavailable" }}</h3></div>
+    <dl class="detail-grid payslip-employee-details">
+      <div class="detail-row"><dt>Employee ID</dt><dd>EMP-{{ record.emp_id|default:"--" }}</dd></div>
+      <div class="detail-row"><dt>Employee name</dt><dd>{{ record.emp.emp_name|default:"--" }}</dd></div>
+      <div class="detail-row"><dt>Gender</dt><dd>{{ record.emp.gender|default:"--" }}</dd></div>
+      <div class="detail-row"><dt>Department</dt><dd>{{ record.emp.department.department_name|default:"Unassigned" }}</dd></div>
+      <div class="detail-row"><dt>Designation</dt><dd>{{ record.emp.designation|default:"--" }}</dd></div>
+      <div class="detail-row"><dt>Joining date</dt><dd>{{ record.emp.join_date|date:"M j, Y"|default:"--" }}</dd></div>
+    </dl>
+  </section>
+
+  <section class="payslip-section" aria-labelledby="payslip-salary-heading">
+    <div class="payslip-section-heading"><p class="section-kicker">Salary statement</p><h3 id="payslip-salary-heading">Payroll breakdown</h3></div>
+    <div class="table-wrap">
+      <table class="payslip-salary-table">
+        <thead><tr><th scope="col">Description</th><th scope="col">Amount</th></tr></thead>
+        <tbody>
+          <tr><td>Basic salary</td><td>₹ {{ record.basic_salary|default_if_none:"0.00"|floatformat:2 }}</td></tr>
+          <tr><td>Bonus</td><td>₹ {{ record.bonus|default_if_none:"0.00"|floatformat:2 }}</td></tr>
+          <tr><td>Deductions</td><td>₹ {{ record.deductions|default_if_none:"0.00"|floatformat:2 }}</td></tr>
+        </tbody>
+        <tfoot><tr><th scope="row">Net salary</th><td>₹ {{ record.net_salary|default_if_none:"0.00"|floatformat:2 }}</td></tr></tfoot>
+      </table>
+    </div>
+  </section>
+  <p class="payslip-note">This payslip reflects the payroll values stored for the selected period.</p>
+</article>
+{% endblock %}

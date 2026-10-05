@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} | Employee Payroll{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><p class="section-kicker">Attendance register</p><h1>{{ page_title }}</h1><p class="page-description">Record an employee's status for one date.</p></div>
+  <a class="button button-secondary" href="{% url 'payroll:attendance' %}">Back to attendance</a>
+</section>
+<section class="surface-card employee-form-card">
+  <form class="employee-form" method="post" action="{% if record %}{% url 'payroll:attendance_edit' record.attendance_id %}{% else %}{% url 'payroll:attendance_add' %}{% endif %}">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="employee-form-grid">
+      {% for field in form %}
+        <div class="form-field">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}<span class="form-help">{{ field.help_text }}</span>{% endif %}
+          {% if field.errors %}<ul class="form-field-errors">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    <div class="form-actions">
+      <a class="button button-secondary" href="{% url 'payroll:attendance' %}">Cancel</a>
+      <button class="button button-primary" type="submit">{% if record %}Save changes{% else %}Mark attendance{% endif %}</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

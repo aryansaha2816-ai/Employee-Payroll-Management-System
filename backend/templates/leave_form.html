@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ page_title }} | Employee Payroll{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><p class="section-kicker">Leave management</p><h1>{{ page_title }}</h1><p class="page-description">Submit the employee and date range for this leave request.</p></div>
+  <a class="button button-secondary" href="{% url 'payroll:leaves' %}">Back to leaves</a>
+</section>
+<section class="surface-card employee-form-card">
+  <form class="employee-form" method="post" action="{% if record %}{% url 'payroll:leave_edit' record.leave_id %}{% else %}{% url 'payroll:leave_add' %}{% endif %}">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    {% if record %}<p class="leave-current-status">Current status: <strong>{{ record.status|default:"--" }}</strong> (status changes use the review actions on the leave list)</p>{% else %}<p class="leave-current-status">New leave applications are submitted as <strong>Pending</strong>.</p>{% endif %}
+    <div class="employee-form-grid">
+      {% for field in form %}
+        <div class="form-field">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}<span class="form-help">{{ field.help_text }}</span>{% endif %}
+          {% if field.errors %}<ul class="form-field-errors">{% for error in field.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    <div class="form-actions">
+      <a class="button button-secondary" href="{% url 'payroll:leaves' %}">Cancel</a>
+      <button class="button button-primary" type="submit">{% if record %}Save changes{% else %}Submit leave application{% endif %}</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

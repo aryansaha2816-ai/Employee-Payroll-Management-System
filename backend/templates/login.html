@@ -1,0 +1,44 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login | Employee Payroll</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  </head>
+  <body class="login-page">
+    <main class="login-layout">
+      <section class="login-aside">
+        <a class="brand login-brand" href="{% url 'payroll:dashboard' %}">
+          <span class="brand-mark" aria-hidden="true">EP</span>
+          <span class="brand-copy"><strong>Employee Payroll</strong><small>Management System</small></span>
+        </a>
+        <p class="login-edition">ADMINISTRATION PORTAL</p>
+        <h1>People operations,<br>in clear view.</h1>
+        <p class="login-aside-note">A unified workspace for payroll and workforce administration.</p>
+        <div class="login-aside-rule"></div>
+        <p class="login-aside-foot">Employee Payroll Management System</p>
+      </section>
+      <section class="login-main" aria-labelledby="login-title">
+        <div class="login-card">
+          <p class="section-kicker">Welcome</p>
+          <h2 id="login-title">Sign in</h2>
+          <p class="muted-copy">Enter your account details to continue.</p>
+          {% if error %}<p class="form-error" role="alert">{{ error }}</p>{% endif %}
+          {% if messages %}{% for message in messages %}<p class="form-error" role="alert">{{ message }}</p>{% endfor %}{% endif %}
+          <form method="post" action="{% url 'login' %}" class="login-form">
+            {# CSRF protection validates this credential-submission POST. #}
+            {% csrf_token %}
+            <label for="username">Username</label>
+            <input id="username" name="username" type="text" autocomplete="username" required>
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+            <button type="submit" class="button button-primary">Login</button>
+          </form>
+          <p class="login-note">Sign in with your Django account credentials.</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Employee {{ employee.emp_id }} | Employee Payroll{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div><p class="section-kicker">Employee directory</p><h1>Employee details</h1><p class="page-description">Profile for EMP-{{ employee.emp_id }}.</p></div>
+  <a class="button button-secondary" href="{% url 'payroll:employees' %}">Back to employees</a>
+</section>
+<section class="surface-card employee-detail-card">
+  <div class="surface-heading"><div><p class="section-kicker">Profile</p><h2>{{ employee.emp_name|default:"Employee name unavailable" }}</h2></div><span class="recent-id">EMP-{{ employee.emp_id }}</span></div>
+  <dl class="detail-grid">
+    <div class="detail-row"><dt>Employee ID</dt><dd>EMP-{{ employee.emp_id }}</dd></div>
+    <div class="detail-row"><dt>Employee name</dt><dd>{{ employee.emp_name|default:"--" }}</dd></div>
+    <div class="detail-row"><dt>Gender</dt><dd>{{ employee.gender|default:"--" }}</dd></div>
+    <div class="detail-row"><dt>Department</dt><dd>{{ employee.department.department_name|default:"Unassigned" }}</dd></div>
+    <div class="detail-row"><dt>Designation</dt><dd>{{ employee.designation|default:"--" }}</dd></div>
+    <div class="detail-row"><dt>Join date</dt><dd>{{ employee.join_date|date:"M j, Y"|default:"--" }}</dd></div>
+    <div class="detail-row"><dt>Basic salary</dt><dd>{% if employee.basic_salary != None %}₹ {{ employee.basic_salary|floatformat:2 }}{% else %}--{% endif %}</dd></div>
+  </dl>
+  <div class="form-actions">
+    <a class="button button-secondary" href="{% url 'payroll:employees' %}">Back to employees</a>
+    <a class="button button-primary" href="{% url 'payroll:employee_edit' employee.emp_id %}">Edit employee</a>
+  </div>
+</section>
+{% endblock %}
